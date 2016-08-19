@@ -22,9 +22,10 @@ echo | set /p dummy=Looking for tcc.exe in PATH...
 for %%A in ("%LOCAL_PATH:;=";"%") do (
     if exist %%A (
         set f="%%~A"
+        echo %%A
         pushd %%A
         for /r %f% %%G in (*.exe) do (
-            if "%%~nxG"=="tcc.exes" (
+            if "%%~nxG"=="tcc.exe" (
                 echo found it!
                 set TCC=%%~dpnxG
                 set TCC_BIN=%%~dpG
