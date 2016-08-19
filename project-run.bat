@@ -11,7 +11,9 @@ for %%i in ("%~dp0..") do (
 set BIN_DIR=%PROJECT_ROOT%\tcc-project\bin
 if not exist %BIN_DIR%\%PROJECT_NAME%.exe goto :no_binary_found
 
-call %BIN_DIR%\%PROJECT_NAME%.exe
+@echo on
+@call %BIN_DIR%\%PROJECT_NAME%.exe
+@echo off
 goto :exit 
 
 :no_binary_found
