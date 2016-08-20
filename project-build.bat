@@ -19,15 +19,31 @@ if not defined TCC goto :tcc_not_found
 echo.
 echo @echo Building %BIN_DIR%\%PROJECT_NAME%.exe with %TCC%>%PROJECT_ROOT%\tcc-project\temp_build.bat
 
-if not exist %PROJECT_ROOT%\project-includes.txt echo Replace this text with one directory per line to include in you project>%PROJECT_ROOT%\project-includes.txt
-
-@rem Gather all configured include directories. These must be relative from project path
+@rem Gather all configured include directories.
 set INCLUDES=-I%TCC_INCLUDE%
 for /f "tokens=*" %%a in (%PROJECT_ROOT%\project-includes.txt) do (
     if exist %%~a (
         set INCLUDES=!INCLUDES! -I%%~a
     ) else (
         set INCLUDES=!INCLUDES! -I%PROJECT_ROOT%\%%~a
+    )
+)
+
+@rem Gather all configured libs to use by link step
+set LIBS=
+if exist %PROJECT_ROOT%\project-libs.txt (
+    for /f "tokens=*" %%a in (%PROJECT_ROOT%\project-libs.txt) do (
+        set LIBS=!LIBS! -l%%~a
+    )
+)
+
+@rem Gather all configured library directories.
+set LIB_FOLDERS=-L%TCC_LIB%
+for /f "tokens=*" %%a in (%PROJECT_ROOT%\project-lib-folders.txt) do (
+    if exist %%~a (
+        set LIB_FOLDERS=!LIB_FOLDERS! -L%%~a
+    ) else (
+        set LIB_FOLDERS=!LIB_FOLDERS! -L%PROJECT_ROOT%\%%~a
     )
 )
 
@@ -49,6 +65,7 @@ echo|set /p=@%TCC% -o %BIN_DIR%\%PROJECT_NAME%.exe>>%PROJECT_ROOT%\tcc-project\t
 for /f "tokens=*" %%a in (%PROJECT_ROOT%\project-files.txt) do (
     echo | set /p dummy=%OBJ_DIR%\%%~na.o>>%PROJECT_ROOT%\tcc-project\temp_build.bat
 )
+echo | set /p dummy= %LIBS%>>%PROJECT_ROOT%\tcc-project\temp_build.bat
 
 echo.>>%PROJECT_ROOT%\tcc-project\temp_build.bat
 echo @echo.>>%PROJECT_ROOT%\tcc-project\temp_build.bat
