@@ -5,6 +5,8 @@ rem set LOCAL_PATH=%~dp0tcc\bin;%PATH%
 
 cd %~dp0
 
+if not defined COMPILER set COMPILER=tcc.exe
+
 if not exist tcc-config.bat (
     goto :find_tcc
 ) else (
@@ -24,7 +26,7 @@ for %%A in ("%LOCAL_PATH:;=";"%") do (
         set f="%%~A"
         pushd %%A
         for /r %f% %%G in (*.exe) do (
-            if "%%~nxG"=="tcc.exe" (
+            if "%%~nxG"=="%COMPILER%" (
                 echo found it!
                 set TCC=%%~dpnxG
                 set TCC_BIN=%%~dpG
